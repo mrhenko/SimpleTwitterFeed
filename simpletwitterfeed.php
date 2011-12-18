@@ -20,7 +20,21 @@
 		  */
 		 function __construct($o) {
 		 	/* Start by checking for settings */
-		 	
+		 	$this->setQuery($o);
+		 }
+		 
+		 /**
+		  * Change query settings
+		  */
+		 public function changeQuery($o) {
+		 	$this->setQuery($o);
+		 }
+		 
+		 
+		 /**
+		  * The method that does the actual query setting
+		  */
+		 private function setQuery($o) {
 		 	if (isset($o['user'])) {
 		 		/* The feed should be a specific users tweets */
 		 		$this->query = 'http://api.twitter.com/statuses/user_timeline.json?screen_name=' . $o['user'];
@@ -39,12 +53,8 @@
 		  */
 		 public function getTweets() {
 		 	$response = $this->requestData();
-		 	if ($this->userfeed === true) {
-			 	$response = $this->parseUserData($response);
-			 } else {
-			 	$response = $this->parseSearchData($response);
-			 }
-		 	
+		 	$response = $this->parseData($response);
+			
 		 	return $response;
 		 }
 		 
@@ -62,29 +72,31 @@
 			return $response;
 		 }
 		 
-		 /**
-		  * Some special treatment for the result if it is a users timeline
-		  */
-		 private function parseUserData($d) {
-		 	$d = json_decode($d);
-		 	$tweets = array();
-			foreach($d as $r) {
-				array_push($tweets, $r->text);
-			}
-			
-			return json_encode($tweets);
-		 }
 		 
 		 /**
 		  * Parse the search result
 		  */
-		 private function parseSearchData($d) {
+		 private function parseData($d) {
 		 	$d = json_decode($d);
 		 	
 		 	$tweets = array();
-		 	foreach ($d->results as $r) {
-		 		array_push($tweets, $r->from_user . ': ' . $r->text);
+		 	
+		 	/* Special stuff */
+		 	if ($this->userfeed === true) {
+		 		$data = $d;
+		 	} else {
+		 		$data = $d->results;
 		 	}
+		 	
+	 		foreach ($data as $r) {
+	 			$tweet = array(
+	 				'text' => $r->text
+	 			);
+	 			if (isset($r->from_user)) {
+	 				$tweet['from_user'] = $r->from_user;
+	 			}
+	 			array_push($tweets, $tweet);
+	 		}
 		 	
 		 	return(json_encode($tweets));
 		 }
