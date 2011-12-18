@@ -14,6 +14,8 @@
 		 private $query; /* The twitter search query */
 		 private $userfeed = false; /* Special treatment is needed if the result is a singel users feed */
 		 
+		 public $version = '0.1.1';
+		 
 		 /**
 		  * $o - The options for the object
 		  *
