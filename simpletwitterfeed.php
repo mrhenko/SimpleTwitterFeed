@@ -52,9 +52,8 @@
 				$this->query = 'http://search.twitter.com/search.json?q=' . urlencode($o['query']);
 			}
 			
-			print_r($this->query);
-			
-			/* Reset the name of the cache file */
+			/* Reset the tweets and the name of the cache file */
+			$this->tweets = array();
 			$this->cache_file = '.cache/simpletwitterfeed' . md5($this->query) . '.cachefile';
 		}
 		 
@@ -66,7 +65,7 @@
 		public function getTweets() {
 			if ($this->checkCache()) {
 				/* If we have a cache */
-				$this->tweets = $this->cache;
+				$this->tweets = $this->cache->tweets;
 			} else {
 				$response = $this->requestData();
 				$this->parseData($response);
