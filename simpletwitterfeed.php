@@ -52,6 +52,8 @@
 				$this->query = 'http://search.twitter.com/search.json?q=' . urlencode($o['query']);
 			}
 			
+			print_r($this->query);
+			
 			/* Reset the name of the cache file */
 			$this->cache_file = '.cache/simpletwitterfeed' . md5($this->query) . '.cachefile';
 		}
@@ -62,17 +64,16 @@
 		 * Returns a JSON object
 		 */
 		public function getTweets() {
-			//$response = $this->requestData();
-			//$this->parseData($response);
-		
 			if ($this->checkCache()) {
 				/* If we have a cache */
-				echo 'We have a cache';
+				$this->tweets = $this->cache;
 			} else {
+				$response = $this->requestData();
+				$this->parseData($response);
 				$this->cache();
 			}
 		
-			//return json_encode($this->tweets);
+			return json_encode($this->tweets);
 		}
 		
 		/**
@@ -136,17 +137,24 @@
 				/* Open the file for reading and re-writing */
 				$handle = fopen($this->cache_file, 'r+');
 				$cache = json_decode(fread($handle, filesize($this->cache_file)));
-				print_r($cache);
 				
 				$time = new DateTime('now');
 				if ($time->getTimestamp() > $cache->cachetime + $this->cacheTime) {
 		 			/* If the cache has expired */
 		 			return false;
 		 		} else {
-		 			/* If not */
-		 			return true;
+		 			/*
+		 				If the cache has not expired, we must check if it
+		 				contains any tweets
+		 			*/
+		 			if (count($cache->tweets) > 0) {
+		 				/* Tweets exists, store them in memory */
+		 				$this->cache = $cache;
+		 				return true;
+		 			} else {
+		 				return false;
+		 			}
 		 		}
-				
 			} else {
 				return false;
 			}
