@@ -15,7 +15,7 @@
 		private $userfeed = false; /* Special treatment is needed if the result is a singel users feed */
 		private $tweets = array(); /* The tweets */
 		private $cache = array();
-		private $cacheTime = '360';
+		private $cacheTime = '600';
 		
 		const VERSION = '0.1.1';
 		private $cache_file = '.cache/simpletwitterfeed.cachefile';
