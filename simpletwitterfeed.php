@@ -27,6 +27,10 @@
 		 */
 		function __construct($o) {
 			/* Start by checking for settings */
+			if (isset($o['cacheTime'])) {
+				$this->cacheTime = $o['cacheTime'];
+			}
+			
 			$this->setQuery($o);
 		}
 		 
