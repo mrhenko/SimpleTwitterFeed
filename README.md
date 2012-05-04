@@ -8,8 +8,8 @@ Usage
 -----
 ### Example
 	$twitter = new simpleTwitterFeed(array(
-		'query' = '#daladevelop',
-		'cacheTime' = '3600'
+		'query' => '#daladevelop',
+		'cacheTime' => '3600'
 	));
 	
 	$tweets = $twitter->getTweets();
@@ -26,6 +26,10 @@ The **cacheTime** setting is optional and specifies the maximum age of a cache f
 
 Version History
 ---------------
+
+### 0.2.2.1
+* Replace DateTime('now') with Time()
+* Corrected incorrect example in README file
 
 ### 0.2.2
 * Changed the default cacheTime to 10 minutes.

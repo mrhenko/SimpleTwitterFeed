@@ -141,7 +141,7 @@
 				$handle = fopen($this->cache_file, 'r+');
 				$cache = json_decode(fread($handle, filesize($this->cache_file)));
 				
-				$time = new DateTime('now');
+				$time = new Time();
 				if ($time->getTimestamp() > $cache->cachetime + $this->cacheTime) {
 		 			/* If the cache has expired */
 		 			return false;
